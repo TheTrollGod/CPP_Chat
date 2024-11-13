@@ -21,6 +21,7 @@ A simple console baed chat application written in C++. Please note that this app
    - [ ] Have users connect with a username
    - [ ]Have users connect with provided credentials
  - [ ] Use file IO to keep a log of the chat
+ - Allow the server admin to determin what port to launch the server on on start
  -  [ ] Add server commands such as whisper
  - TBD
  - Maybes
