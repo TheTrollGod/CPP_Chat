@@ -57,6 +57,7 @@ public:
 class ChatServer {
     // Creates a vector of all of the clients with their respective information
     std::vector<ClientInfo> clients;
+    std::vector<std::thread> clientThreads;
     char buffer[1024];
     int serverSocket;
     // Creates an isntance of the message Queue
@@ -68,21 +69,28 @@ public:
     void start();
     void broadcastMessage(const std::string& message, int senderSocket);
     void handleClient(int clientSocket);
-
-    void keyboardInteruptHandler(int signum);
-    void stopServer();
+    void stop();
+    ~ChatServer() {
+        std::cout << "Stopping server" << std::endl;
+        // Handles closing of the server
+        for (auto& client : clients) {
+            close(client.socket);  // Close each client's socket
+        }
+         logFile.close();
+        close(serverSocket);
+        for (auto& t : clientThreads) {
+            t.join();
+        }
+        std::cout << "Server resources cleaned up." << std::endl;
+    }
 };
 
-void ChatServer::keyboardInteruptHandler(int signum) {
-    std::cout << "Interrupt signal recived (" << signum << ")" << std::endl;
-    keyBorInt = false;
-}
-// Global signal declaration to make things easier
-void signal(int i, void(ChatServer::* keyboard_interupt_handler)(int signum));
 
 // Function: Start the Server
 void ChatServer::start() {
     std::cout << "Server started." << std::endl;
+
+    // TODO: Create an if statment seeing if the log file exists
     logFile.open(logFilePath, std::ios::app);  // App to append to the log file
     // Inital socket initalization
 
@@ -106,11 +114,7 @@ void ChatServer::start() {
     std::cout<< "Lestening on port "<< serverPort << std::endl;
 
     // Chat server logic to accept clients
-     do{
-        signal(SIGINT, keyboardInteruptHandler);
 
-    }
-    while(keyBorInt);
 
     while(keyBorInt) {
         sockaddr_in clientAddr;
@@ -120,13 +124,18 @@ void ChatServer::start() {
             std::cerr << "Socket accept failed." << std::endl;
         }
         clients.push_back(ClientInfo{clientSocket, "Temp_Uername"});
+
         // Create a thread so that the client can continue to communicate with the server outside of this process
         std::thread clientThread(&ChatServer::handleClient, this, clientSocket);
+        clientThreads.push_back(clientThread);
         clientThread.detach();
 
     }
 }
 
+void ChatServer::stop() {
+    keyBorInt = false;
+}
 
 // Function: Broadcast Message
 void ChatServer::broadcastMessage(const std::string& message, int senderSocket) {
@@ -159,26 +168,38 @@ void ChatServer::handleClient(int clientSocket) {
 }
 
 
-void ChatServer::stopServer() {
-    std::cout << "Stopping server" << std::endl;
-    // Handles closing of the server
+
+
+
+// Signal handeling
+ChatServer* server = nullptr;
+
+void signalHandler(int signum) {
+    server->stop();
+    delete server;
+    std::cout << "Captured Ctrl+c" << std::endl;
+
+    //exit(signum);
 }
+
+
+
 
 // Main Function
 int main() {
-    ChatServer server;
+    server = new ChatServer;
     try {
-        server.start();
+        signal(SIGINT, signalHandler);
+        //server.start();
+        // Gets the start function memory address from the memory space of server as defined by the sever pointer probably
+        server->start();
     }
     // general catch
     catch (std::exception& e)
     {
         std::cout << e.what() << '\n';
     }
-    catch () {
-        // Default catch
-        std::cout << "Something unexpected happened" << std::endl;
-    }
+
     std::cout << "Server stopped." << std::endl;
 
     return 0;
