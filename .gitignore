@@ -33,3 +33,4 @@
 
 # Compilation folders
 /build
+/cmake-build*
