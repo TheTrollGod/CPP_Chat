@@ -20,7 +20,7 @@
 // Global variable declarations
 std::string logFilePath = "/var/log/chat.log";
 std::ofstream logFile;
-int serverPort = 8080; // server port
+//int serverPort = 1234; // server port
 
 
 
@@ -66,7 +66,7 @@ class ChatServer {
 
 public:
     bool keyBorInt = true;
-    void start();
+    void start(int serverPort);
     void broadcastMessage(const std::string& message, int senderSocket);
     void handleClient(int clientSocket);
     void stop();
@@ -87,29 +87,36 @@ public:
 
 
 // Function: Start the Server
-void ChatServer::start() {
+void ChatServer::start(int serverPort) {
     std::cout << "Server started." << std::endl;
 
     // TODO: Create an if statment seeing if the log file exists
+    std::cout << "Opening log file" << std::endl;
     logFile.open(logFilePath, std::ios::app);  // App to append to the log file
+    std::cout << "Log file opened" << std::endl;
     // Inital socket initalization
 
     // AF_INET = IPv4, SOCK_STREAM = TCP
+    std::cout << "Starting socket initalization" << std::endl;
     serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (serverSocket < 0) {
         std::cerr << "Socket creation failed." << std::endl;
         return;
     }
+    std::cout << "Socket creation success" << std::endl;
 
     sockaddr_in serverAddr;
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_addr.s_addr = INADDR_ANY;
     serverAddr.sin_port = htons(serverPort);
+    std::cout << "Assigned socket charecteristics" << std::endl;
 
     if (bind(serverSocket, (sockaddr*)&serverAddr, sizeof(serverAddr))) {
         std::cerr << "Socket bind failed." << std::endl;
         return;
     }
+    std::cout << "Socket Bind success" << std::endl;
+
     listen(serverSocket, 5);
     std::cout<< "Lestening on port "<< serverPort << std::endl;
 
@@ -127,7 +134,7 @@ void ChatServer::start() {
 
         // Create a thread so that the client can continue to communicate with the server outside of this process
         std::thread clientThread(&ChatServer::handleClient, this, clientSocket);
-        clientThreads.push_back(clientThread);
+        clientThreads.push_back(std::move(clientThread));
         clientThread.detach();
 
     }
@@ -175,6 +182,7 @@ void ChatServer::handleClient(int clientSocket) {
 ChatServer* server = nullptr;
 
 void signalHandler(int signum) {
+
     server->stop();
     delete server;
     std::cout << "Captured Ctrl+c" << std::endl;
@@ -192,7 +200,10 @@ int main() {
         signal(SIGINT, signalHandler);
         //server.start();
         // Gets the start function memory address from the memory space of server as defined by the sever pointer probably
-        server->start();
+        int start_port;
+        std::cout << "Server port: ";
+        std::cin >> start_port;
+        server->start(start_port);
     }
     // general catch
     catch (std::exception& e)
