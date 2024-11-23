@@ -1,3 +1,4 @@
-/home/anthonysherman/CLionProjects/CPP_Chat/cmake-build-debug/CMakeFiles/CPP_Chat.dir
+/home/anthonysherman/CLionProjects/CPP_Chat/cmake-build-debug/CMakeFiles/ServerApp.dir
+/home/anthonysherman/CLionProjects/CPP_Chat/cmake-build-debug/CMakeFiles/ClientApp.dir
 /home/anthonysherman/CLionProjects/CPP_Chat/cmake-build-debug/CMakeFiles/edit_cache.dir
 /home/anthonysherman/CLionProjects/CPP_Chat/cmake-build-debug/CMakeFiles/rebuild_cache.dir

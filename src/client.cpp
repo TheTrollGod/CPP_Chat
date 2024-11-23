@@ -34,15 +34,18 @@ public:
     ChatClient(std::string ip, int port) : serverIP(ip), serverPort(port) {}
 
     bool connectToServer() {
+        std::cout << "Attempting to connect to server" << std::endl;
         clientSocket = socket(AF_INET, SOCK_STREAM, 0);
         if (clientSocket < 0) {
             std::cerr << "Failed to create socket." << std::endl;
             return false;
         }
+        std::cout << "Created client socket" << std::endl;
 
         sockaddr_in serverAddr;
         serverAddr.sin_family = AF_INET;
         serverAddr.sin_port = htons(serverPort);
+        std::cout << "Assigned client socket characteristics" << std::endl;
 
         // Convert IP address from text to binary form
         if (inet_pton(AF_INET, serverIP.c_str(), &serverAddr.sin_addr) <= 0) {
@@ -51,14 +54,17 @@ public:
         }
 
         // Connect to the server
+        // TODO: research connect function to make it time out?
         if (connect(clientSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr)) < 0) {
             std::cerr << "Connection to server failed." << std::endl;
             return false;
         }
+        std::cout << "Server connection successful" << std::endl;
 
         std::cout << "Connected to the server at " << serverIP << ":" << serverPort << std::endl;
 
         // Start the message receiving thread
+        // TODO: Track threads to bring back when closing
         std::thread recvThread(&ChatClient::receiveMessages, this);
         recvThread.detach();
 
@@ -72,6 +78,7 @@ public:
     }
 
     void run() {
+        std::cout << "Starting Client" << std::endl;
         while (isRunning) {
             std::string message;
             std::getline(std::cin, message); // Get input from the user
@@ -93,6 +100,10 @@ public:
 int main() {
     std::string serverIP = "127.0.0.1"; // Change this to your server's IP address if needed
     int serverPort = 8080;
+    std::cout<< "Enter the server ip address" << std::endl;
+    std::cin >> serverIP;
+    std::cout << "Enter the server port" << std::endl;
+    std::cin >> serverPort;
 
     ChatClient client(serverIP, serverPort);
 
