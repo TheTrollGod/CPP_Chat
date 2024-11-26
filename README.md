@@ -10,7 +10,7 @@ THe chat client currently support Linux systems. Compatability with Windows will
  - [X] Use of structs or enumeration
  - [X] Classes with Object Oriented Design
  - [X] Arrays
- - [ ] Pointers
+ - [X] Pointers
  - [X] templates
  - [X] file streams
  - [ ] class relations 
@@ -21,7 +21,7 @@ THe chat client currently support Linux systems. Compatability with Windows will
    - Decide what encryption standard to use
    - Decide to use symetric or asymetric encryption
  - Authentication
-   - [ ] Have users connect with a username
+   - [X] Have users connect with a username
    - [ ]Have users connect with provided credentials
  - [X] Use file IO to keep a log of the chat
  - [X] Allow the server admin to determin what port to launch the server on on start

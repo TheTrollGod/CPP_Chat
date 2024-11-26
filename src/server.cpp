@@ -25,14 +25,13 @@ std::ofstream logFile;
 //int serverPort = 1234; // server port
 
 
-
+// Function: Structure for saving client info
 struct ClientInfo {
     int socket;
     std::string username;
 };
 
-// Message Queue
-// Ensures that messages are not lost when the server is busy
+// Data structure: A queue for messages
 template <typename T>
 class MessageQueue {
     std::queue<T> queue;
@@ -60,22 +59,33 @@ public:
 
 // Class: Chat Server
 class ChatServer {
-    // Creates a vector of all of the clients with their respective information
+    // Avector of all of the clients with their respective information
     std::vector<ClientInfo> clients;
+    // A vector that stores thread ID's to keep track of them
+    // See the folowing datatype that will be put into the vector:
+    // std::thread clientThread(&ChatServer::handleClient, this, clientSocket);
     std::vector<std::thread> clientThreads;
+    // Message buffer
     char buffer[1024];
+    // Socket for the server
     int serverSocket;
-    // Creates an isntance of the message Queue
+    // On object of the message Queue
     MessageQueue<std::string> messageQueue;
 
 
 public:
+    // Variable to detect a keyboard interupt. Its function is do capture a ctrl+c
+    // so that the main loop breaks cleanly
     bool keyBorInt = true;
+    // Starts the chat server
     void start(int serverPort);
-    //void broadcastMessage(const std::string& message, int senderSocket);
+    // Starts the broadcast loop to send messages from the message queue
     void broadcastMessage();
+    // Handles the client interactions
     void handleClient(int clientSocket);
+    // Stops the server
     void stop();
+    // Deconstructor to clean up the server
     ~ChatServer() {
         std::cout << "Stopping server" << std::endl;
         // Handles closing of the server
@@ -191,6 +201,7 @@ void ChatServer::handleClient(int clientSocket) {
     // If the client disconnects
     std::cout << "Client disconnected: " << clientSocket << std::endl;
     close(clientSocket);  // Close the connection
+    clientThreads.pop()
 }
 
 

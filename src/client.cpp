@@ -13,8 +13,9 @@ class ChatClient {
 private:
     int clientSocket;
     std::string serverIP = "127.0.0.1"; // Default to localhost
-    int serverPort = 8080;
+    int serverPort = 8080;  // Default port
     bool isRunning = true;
+
 
     void receiveMessages() {
         char buffer[1024];
@@ -22,7 +23,10 @@ private:
             int bytesReceived = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
             if (bytesReceived > 0) {
                 buffer[bytesReceived] = '\0'; // Null-terminate the received data
-                std::cout << buffer << std::endl;
+                if (buffer != message) {
+                    std::cout << buffer << std::endl;
+                }
+
             } else if (bytesReceived == 0) {
                 std::cout << "Server disconnected." << std::endl;
                 isRunning = false;
@@ -35,6 +39,8 @@ private:
     }
 
 public:
+    std::string username = "Anonymous";
+    std::string message;
     ChatClient(std::string ip, int port) : serverIP(ip), serverPort(port) {}
 
     bool connectToServer() {
@@ -85,10 +91,10 @@ public:
     void run() {
         //std::cout << "Starting Client" << std::endl;
         while (isRunning) {
-            std::string message;
-            std::getline(std::cin, message); // Get input from the user
-
-            if (message == "/quit") {
+            std::string tempMessage;
+            std::getline(std::cin, tempMessage); // Get input from the user
+            message = "[" + username + "]: " + tempMessage;
+            if (tempMessage == "/quit") {
                 isRunning = false;
                 break;
             }
@@ -97,6 +103,7 @@ public:
         }
 
         // Close the socket when done
+        sendMessage("[" + username + " has disconnected]");
         close(clientSocket);
         std::cout << "Disconnected from the server." << std::endl;
     }
@@ -111,6 +118,9 @@ int main() {
     std::cin >> serverPort;
 
     ChatClient client(serverIP, serverPort);
+
+    std::cout << "Enter your username" << std::endl;
+    std::cin >> client.username;
 
     if (client.connectToServer()) {
         client.run();
