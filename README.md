@@ -2,26 +2,26 @@
 A simple console baed chat application written in C++. Please note that this application is currently only support on Debian based systems unless otherwise mentioned.
 
 # Application Requirements
- - [ ] Use of control structure
- - [ ] Use of functions
- - [ ] Use of structs or enumeration
- - [ ] Classes with Object Oriented Design
- - [ ] Arrays
+ - [X] Use of control structure
+ - [X] Use of functions
+ - [X] Use of structs or enumeration
+ - [X] Classes with Object Oriented Design
+ - [X] Arrays
  - [ ] Pointers
- - [ ] templates
- - [ ] file streams
+ - [X] templates
+ - [X] file streams
  - [ ] class relations 
 ## Project Specifications
- - [ ] Create a server to recive TCP sockets and transmit messages
- - [ ] Create a client to send messages and view the chatlog
+ - [X] Create a server to recive TCP sockets and transmit messages
+ - [X] Create a client to send messages and view the chatlog
  - [ ] Encrypt the traffic between client and server
    - Decide what encryption standard to use
    - Decide to use symetric or asymetric encryption
  - Authentication
    - [ ] Have users connect with a username
    - [ ]Have users connect with provided credentials
- - [ ] Use file IO to keep a log of the chat
- - Allow the server admin to determin what port to launch the server on on start
+ - [X] Use file IO to keep a log of the chat
+ - [X] Allow the server admin to determin what port to launch the server on on start
  -  [ ] Add server commands such as whisper
  - TBD
  - Maybes

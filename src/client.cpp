@@ -62,6 +62,7 @@ public:
         std::cout << "Server connection successful" << std::endl;
 
         std::cout << "Connected to the server at " << serverIP << ":" << serverPort << std::endl;
+        std::cout << "Use /quit to exit" << std::endl;
 
         // Start the message receiving thread
         // TODO: Track threads to bring back when closing
@@ -78,7 +79,7 @@ public:
     }
 
     void run() {
-        std::cout << "Starting Client" << std::endl;
+        //std::cout << "Starting Client" << std::endl;
         while (isRunning) {
             std::string message;
             std::getline(std::cin, message); // Get input from the user
