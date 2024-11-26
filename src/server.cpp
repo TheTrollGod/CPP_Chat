@@ -201,7 +201,6 @@ void ChatServer::handleClient(int clientSocket) {
     // If the client disconnects
     std::cout << "Client disconnected: " << clientSocket << std::endl;
     close(clientSocket);  // Close the connection
-    clientThreads.pop()
 }
 
 
@@ -212,13 +211,12 @@ void ChatServer::handleClient(int clientSocket) {
 ChatServer* server = nullptr;
 
 void signalHandler(int signum) {
-
-    server->stop();
-    delete server;
-    std::cout << "Captured Ctrl+c" << std::endl;
-
-    //exit(signum);
+    if (server) {
+        server->stop();  // Stop the server's loops
+        std::cout << "Captured Ctrl+C, stopping the server..." << std::endl;
+    }
 }
+
 
 
 
@@ -228,20 +226,19 @@ int main() {
     server = new ChatServer;
     try {
         signal(SIGINT, signalHandler);
-        //server.start();
-        // Gets the start function memory address from the memory space of server as defined by the sever pointer probably
+
         int start_port;
         std::cout << "Server port: ";
         std::cin >> start_port;
-        server->start(start_port);
+
+        server->start(start_port);  // This runs until stop() is called
+    } catch (const std::exception& e) {
+        std::cerr << "Exception occurred: " << e.what() << std::endl;
     }
-    // general catch
-    catch (std::exception& e)
-    {
-        std::cout << e.what() << '\n';
-    }
+
+    delete server;  // Cleanup server resources after stop() is called
+    server = nullptr;
 
     std::cout << "Server stopped." << std::endl;
-
     return 0;
 }
