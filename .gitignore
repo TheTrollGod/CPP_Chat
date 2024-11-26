@@ -32,5 +32,4 @@
 *.app
 
 # Compilation folders
-/build
-/cmake-build*
+/*build*
