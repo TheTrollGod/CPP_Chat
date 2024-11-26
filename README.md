@@ -3,7 +3,11 @@ A simple console baed chat application written in C++. Please note that this app
 # Compatability
 The chat sever is only compatible on Linux systems.
 THe chat client currently support Linux systems. Compatability with Windows will be added in a later revision.
-
+# Building the project
+This project uses cmake to compile the project.
+See more instructions on how to build the project [here](./BUILD.md)
+# Running the project
+See information about running the project [here](./RUN.md)
 # Application Requirements
  - [X] Use of control structure
  - [X] Use of functions
