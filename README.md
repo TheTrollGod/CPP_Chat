@@ -1,5 +1,8 @@
 # CPP_Chat
 A simple console baed chat application written in C++. Please note that this application is currently only support on Debian based systems unless otherwise mentioned.
+# Compatability
+The chat sever is only compatible on Linux systems.
+THe chat client currently support Linux systems. Compatability with Windows will be added in a later revision.
 
 # Application Requirements
  - [X] Use of control structure
