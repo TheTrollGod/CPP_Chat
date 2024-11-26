@@ -9,6 +9,8 @@
 
 // Includes for error handeling
 #include <exception>
+#include <cerrno>
+#include <cstring>
 #include <cstdlib>
 #include <signal.h>
 
@@ -118,7 +120,7 @@ void ChatServer::start(int serverPort) {
     std::cout << "Socket Bind success" << std::endl;
 
     listen(serverSocket, 5);
-    std::cout<< "Lestening on port "<< serverPort << std::endl;
+    std::cout<< "Listening on port "<< serverPort << std::endl;
 
     // Chat server logic to accept clients
 
@@ -128,14 +130,15 @@ void ChatServer::start(int serverPort) {
         socklen_t clientLen = sizeof(clientAddr);
         int clientSocket = accept(serverSocket, (sockaddr*)&clientAddr, &clientLen);
         if (clientSocket < 0) {
-            std::cerr << "Socket accept failed." << std::endl;
+            std::cerr << "Socket accept failed. Error: " << std::strerror(errno) << std::endl;
         }
+        std::cout << "New Client connected!" << std::endl;
         clients.push_back(ClientInfo{clientSocket, "Temp_Uername"});
 
         // Create a thread so that the client can continue to communicate with the server outside of this process
         std::thread clientThread(&ChatServer::handleClient, this, clientSocket);
         clientThreads.push_back(std::move(clientThread));
-        clientThread.detach();
+        //clientThread.detach();
 
     }
 }
