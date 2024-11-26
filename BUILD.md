@@ -42,7 +42,10 @@ cmake --version
 mkdir build
 cd build
 cmake ..
+
 make
+OR
+cmake --build .
 ```
 
 # Clion specifcs
