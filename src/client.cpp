@@ -18,7 +18,7 @@ private:
             int bytesReceived = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
             if (bytesReceived > 0) {
                 buffer[bytesReceived] = '\0'; // Null-terminate the received data
-                std::cout << "[Server]: " << buffer << std::endl;
+                std::cout << buffer << std::endl;
             } else if (bytesReceived == 0) {
                 std::cout << "Server disconnected." << std::endl;
                 isRunning = false;

@@ -37,6 +37,9 @@ template <typename T>
 class MessageQueue {
     std::queue<T> queue;
 public:
+    bool isEmpty() const {
+        return queue.empty();
+    }
     void push(const T& message) {
         queue.push(message);
     }
@@ -69,7 +72,8 @@ class ChatServer {
 public:
     bool keyBorInt = true;
     void start(int serverPort);
-    void broadcastMessage(const std::string& message, int senderSocket);
+    //void broadcastMessage(const std::string& message, int senderSocket);
+    void broadcastMessage();
     void handleClient(int clientSocket);
     void stop();
     ~ChatServer() {
@@ -123,8 +127,7 @@ void ChatServer::start(int serverPort) {
     std::cout<< "Listening on port "<< serverPort << std::endl;
 
     // Chat server logic to accept clients
-
-
+    std::thread broadcastThread = std::thread(&ChatServer::broadcastMessage, this);
     while(keyBorInt) {
         sockaddr_in clientAddr;
         socklen_t clientLen = sizeof(clientAddr);
@@ -134,10 +137,12 @@ void ChatServer::start(int serverPort) {
         }
         std::cout << "New Client connected!" << std::endl;
         clients.push_back(ClientInfo{clientSocket, "Temp_Uername"});
-
+        std::cout << "Client added to thread vector" << std::endl;
         // Create a thread so that the client can continue to communicate with the server outside of this process
         std::thread clientThread(&ChatServer::handleClient, this, clientSocket);
+        std::cout << "Thread started" << std::endl;
         clientThreads.push_back(std::move(clientThread));
+
         //clientThread.detach();
 
     }
@@ -148,16 +153,24 @@ void ChatServer::stop() {
 }
 
 // Function: Broadcast Message
-void ChatServer::broadcastMessage(const std::string& message, int senderSocket) {
+//void ChatServer::broadcastMessage(const std::string& message, int senderSocket) {
+void ChatServer::broadcastMessage() {
     // Broadcast to each client
+    std::cout << "Broadcasting loop starting" << std::endl;
     while (true) {
+        while (messageQueue.isEmpty()) {
+            sleep(0.25);
+        }
         std::string msg = messageQueue.pop(); // Waits for a message
+        std::cout << "Message received: " << msg << std::endl;
         for (const auto& client : clients) {
             // Send the message to each client
             send(client.socket, msg.c_str(), msg.size(), 0);
+            std::cout << "Message sent" << std::endl;
+            // Log the broadcasted message
+            logFile << msg << std::endl;
+            std::cout << "Message saved to logFile" << std::endl;
         }
-        // Log the broadcasted message
-        logFile << msg << std::endl;
     }
 }
 
@@ -168,8 +181,11 @@ void ChatServer::handleClient(int clientSocket) {
 
     // Wait for messages from the client
     while (recv(clientSocket, buffer, sizeof(buffer), 0) > 0) {
+        std::cout << "Recived message. Adding to buffer. Message: " << buffer << std::endl;
         std::string message(buffer);
         messageQueue.push(message);
+        std::cout << "Message added to the message queue" << std::endl;
+        memset(buffer, 0, sizeof(buffer));
     }
 
     // If the client disconnects
