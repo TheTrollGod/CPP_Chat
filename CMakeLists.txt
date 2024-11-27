@@ -41,3 +41,4 @@ if(WIN32)
     # Link necessary libraries for WindowsClient
     target_link_libraries(WindowsClient ws2_32 stdc++)
 endif()
+
