@@ -34,6 +34,8 @@ See information about running the project [here](./RUN.md)
  - Maybes
    - [X] Cross-platform compatability bewteen Windows and Linux
    - [ ] Add Mac compatability
+   - [ ] Add GUI's for Linux using Wayland
+   - [ ] Add GUI's for Windows using DirectX
 
 # Project Structure
 ```
