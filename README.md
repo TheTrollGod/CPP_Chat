@@ -1,8 +1,8 @@
 # CPP_Chat
-A simple console baed chat application written in C++. Please note that this application is currently only support on Debian based systems unless otherwise mentioned.
+A simple console baed chat application written in C++. Please note that this application is currently is only supported on Debian systems as well as Windows.
 # Compatability
-The chat sever is only compatible on Linux systems.
-THe chat client currently support Linux systems. Compatability with Windows will be added in a later revision.
+The chat sever is only compatible on Debian systems. The chat client is avaiable on Debian and Windows 10 and 11 systems.
+
 # Building the project
 This project uses cmake to compile the project.
 See more instructions on how to build the project [here](./BUILD.md)
@@ -32,7 +32,8 @@ See information about running the project [here](./RUN.md)
  -  [ ] Add server commands such as whisper
  - TBD
  - Maybes
-   - [ ] Cross-platform compatability bewteen Windows and Linux
+   - [X] Cross-platform compatability bewteen Windows and Linux
+   - [ ] Add Mac compatability
 
 # Project Structure
 ```
@@ -42,6 +43,7 @@ chat_app/
 ├── lib/
 │   ├── libssl.a     # OpenSSL library
 │   ├── libcrypto.a
+|   ├── windows.dll  # Windows .dll files
 ├── src/
 │   ├── server.cpp   # Server implementation
 │   ├── client.cpp   # Client implementation
@@ -52,5 +54,6 @@ chat_app/
 ```
 
 # Reference Materials
+[winsock2.h](https://learn.microsoft.com/en-us/windows/win32/winsock/windows-sockets-start-page-2)
 [netinet/in.h](https://man7.org/linux/man-pages/man0/netinet_in.h.0p.html) <br>
 [unistd.h](https://www.man7.org/linux/man-pages/man0/unistd.h.0p.html)
