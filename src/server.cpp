@@ -84,7 +84,6 @@ public:
     // Handles the client interactions
     void handleClient(int clientSocket);
     // Stops the server
-    void stop();
     // Deconstructor to clean up the server
     ~ChatServer() {
         std::cout << "Stopping server" << std::endl;
@@ -158,9 +157,6 @@ void ChatServer::start(int serverPort) {
     }
 }
 
-void ChatServer::stop() {
-    keyBorInt = false;
-}
 
 // Function: Broadcast Message
 //void ChatServer::broadcastMessage(const std::string& message, int senderSocket) {
@@ -212,8 +208,10 @@ ChatServer* server = nullptr;
 
 void signalHandler(int signum) {
     if (server) {
-        server->stop();  // Stop the server's loops
         std::cout << "Captured Ctrl+C, stopping the server..." << std::endl;
+        delete server;  // Cleanup server resources after stop() is called
+        server = nullptr;
+        exit(0);
     }
 }
 
@@ -235,9 +233,6 @@ int main() {
     } catch (const std::exception& e) {
         std::cerr << "Exception occurred: " << e.what() << std::endl;
     }
-
-    delete server;  // Cleanup server resources after stop() is called
-    server = nullptr;
 
     std::cout << "Server stopped." << std::endl;
     return 0;
