@@ -85,16 +85,22 @@ public:
     }
 
     void run() {
+        int firstMessage = 0;
         //std::cout << "Starting Client" << std::endl;
         while (isRunning) {
             std::string tempMessage;
-            std::getline(std::cin, tempMessage); // Get input from the user
-            message = "[" + username + "]: " + tempMessage;
-            if (tempMessage == "/quit") {
-                isRunning = false;
-                break;
+            if (firstMessage == 0) {
+                message = "[" + username + " has joined]";
+                firstMessage = 1;
             }
-
+            else {
+                std::getline(std::cin, tempMessage); // Get input from the user
+                message = "[" + username + "]: " + tempMessage;
+                if (tempMessage == "/quit") {
+                    isRunning = false;
+                    break;
+                }
+            }
             sendMessage(message);
         }
 
