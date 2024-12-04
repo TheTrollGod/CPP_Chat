@@ -1,13 +1,10 @@
 #include <iostream>
 #include <string>
 #include <thread>
-#ifdef __linux__
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-#elif _WIN32
-#include <windows.h>
-#endif
+
 
 class ChatClient {
 private:
@@ -142,3 +139,6 @@ int main() {
 
     return 0;
 }
+
+
+
