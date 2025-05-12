@@ -37,6 +37,8 @@ See information about running the project [here](./RUN.md)
    - [ ] Add GUI's for Linux using Wayland
    - [ ] Add GUI's for Windows using DirectX
 
+# Project restrucring into C#
+
 # Project Structure
 ```
 chat_app/
